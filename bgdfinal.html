@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brain Gym Daily - Your Daily Mental Workout</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+        }
+
+        .game-container {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            font-size: 24px;
+            flex: 1;
+        }
+
+        .stats-button {
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 8px 15px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .stats-button:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+
+        .share-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .share-icon-button {
+            background: #48bb78;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 8px 12px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .share-icon-button:hover {
+            background: #38a169;
+            transform: translateY(-2px);
+        }
+
+        .gym-icon {
+            font-size: 28px;
+            margin-right: 5px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .daily-info {
+            background: #f0f4ff;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .daily-streak {
+            font-size: 20px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 3px;
+        }
+
+        .daily-text {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .timer-display {
+            background: #fff5f5;
+            border: 2px solid #f56565;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .timer-label {
+            font-size: 16px;
+            font-weight: bold;
+            color: #742a2a;
+        }
+
+        .timer-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #c53030;
+            font-family: 'Courier New', monospace;
+        }
+
+        .score-board {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f0f4ff;
+            border-radius: 15px;
+        }
+
+        .score-item {
+            text-align: center;
+        }
+
+        .score-label {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .score-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .attempts-tracker {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .attempt-box {
+            width: 50px;
+            height: 50px;
+            border: 3px solid #ddd;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .attempt-box.correct {
+            background: #c6f6d5;
+            border-color: #48bb78;
+            color: #22543d;
+        }
+
+        .attempt-box.incorrect {
+            background: #fed7d7;
+            border-color: #f56565;
+            color: #742a2a;
+        }
+
+        .attempt-box.current {
+            border-color: #667eea;
+            background: #e0e7ff;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-box {
+            background: #f0f4ff;
+            padding: 15px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .distribution {
+            margin-bottom: 20px;
+        }
+
+        .distribution-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .distribution-bar {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .bar-label {
+            width: 25px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #666;
+        }
+
+        .bar-fill {
+            background: #667eea;
+            height: 25px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            padding: 0 8px;
+            color: white;
+            font-weight: bold;
+            min-width: 25px;
+            transition: width 0.3s;
+            font-size: 13px;
+        }
+
+        .close-button {
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 25px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+            transition: all 0.2s;
+        }
+
+        .close-button:hover {
+            background: #5568d3;
+        }
+
+        .completion-message {
+            background: #c6f6d5;
+            border: 3px solid #48bb78;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .completion-title {
+            font-size: 26px;
+            font-weight: bold;
+            color: #22543d;
+            margin-bottom: 12px;
+        }
+
+        .completion-text {
+            font-size: 16px;
+            color: #22543d;
+            margin-bottom: 15px;
+        }
+
+        .share-button {
+            background: #48bb78;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 25px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 8px;
+            transition: all 0.2s;
+        }
+
+        .share-button:hover {
+            background: #38a169;
+        }
+
+        .problem-display {
+            background: #f5f5f5;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            text-align: center;
+            border: 3px solid #667eea;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .problem-text {
+            font-size: 32px;
+            color: #333;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .problem-question {
+            font-size: 16px;
+            color: #555;
+            margin-top: 5px;
+        }
+
+        .answer-input {
+            font-size: 32px;
+            padding: 15px;
+            border: 3px solid #667eea;
+            border-radius: 15px;
+            text-align: center;
+            width: 100%;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .answer-input:focus {
+            outline: none;
+            border-color: #48bb78;
+        }
+
+        .number-pad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .num-button {
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 28px;
+            padding: 18px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .num-button:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+        }
+
+        .num-button:active {
+            transform: translateY(0);
+        }
+
+        .control-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .submit-button {
+            background: #48bb78;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            padding: 18px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .submit-button:hover {
+            background: #38a169;
+            transform: translateY(-2px);
+        }
+
+        .clear-button {
+            background: #f56565;
+        }
+
+        .clear-button:hover {
+            background: #e53e3e;
+        }
+
+        .feedback {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .feedback.correct {
+            background: #c6f6d5;
+            color: #22543d;
+            display: block;
+        }
+
+        .feedback.incorrect {
+            background: #fed7d7;
+            color: #742a2a;
+            display: block;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 600px) {
+            .game-container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 20px;
+            }
+
+            .gym-icon {
+                font-size: 24px;
+                margin-right: 3px;
+            }
+            
+            .problem-text {
+                font-size: 28px;
+            }
+
+            .answer-input {
+                font-size: 28px;
+                padding: 12px;
+            }
+            
+            .num-button {
+                font-size: 24px;
+                padding: 15px;
+            }
+
+            .submit-button {
+                font-size: 16px;
+                padding: 15px;
+            }
+
+            .attempt-box {
+                width: 45px;
+                height: 45px;
+                font-size: 18px;
+            }
+
+            .modal-content {
+                padding: 20px;
+            }
+
+            .stats-button {
+                padding: 6px 12px;
+                font-size: 14px;
+            }
+
+            .share-icon-button {
+                padding: 6px 10px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="header">
+            <div style="width: 40px;"></div>
+            <h1><span class="gym-icon">🏋️💯➕</span>Brain Gym Daily</h1>
+            <div class="share-buttons">
+                <button class="share-icon-button" onclick="shareApp()" title="Share App">🔗</button>
+                <button class="stats-button" onclick="showStats()">📊</button>
+            </div>
+        </div>
+        <p class="subtitle">Your daily mental workout</p>
+
+        <div class="daily-info">
+            <div class="daily-streak">🔥 <span id="dailyStreak">0</span> Day Streak</div>
+            <div class="daily-text">Problem <span id="currentProblem">1</span> of <span id="totalProblems">7</span> today</div>
+        </div>
+
+        <div class="timer-display">
+            <div class="timer-label">⏱️ Time:</div>
+            <div class="timer-value" id="timerValue">0:00</div>
+        </div>
+
+        <div class="attempts-tracker" id="attemptsTracker">
+            <div class="attempt-box current">1</div>
+            <div class="attempt-box">2</div>
+            <div class="attempt-box">3</div>
+        </div>
+
+        <div class="feedback" id="feedback"></div>
+
+        <div class="problem-display">
+            <div class="problem-text" id="problemText">12 + 8 = ?</div>
+            <div class="problem-question">What is the answer?</div>
+        </div>
+
+        <input type="text" class="answer-input" id="answerInput" readonly placeholder="Type your answer">
+
+        <div class="number-pad">
+            <button class="num-button" onclick="addDigit('7')">7</button>
+            <button class="num-button" onclick="addDigit('8')">8</button>
+            <button class="num-button" onclick="addDigit('9')">9</button>
+            <button class="num-button" onclick="addDigit('4')">4</button>
+            <button class="num-button" onclick="addDigit('5')">5</button>
+            <button class="num-button" onclick="addDigit('6')">6</button>
+            <button class="num-button" onclick="addDigit('1')">1</button>
+            <button class="num-button" onclick="addDigit('2')">2</button>
+            <button class="num-button" onclick="addDigit('3')">3</button>
+            <button class="num-button" onclick="addDigit('0')">0</button>
+            <button class="num-button" onclick="addDigit('.')">.</button>
+            <button class="num-button clear-button" onclick="clearInput()">⌫</button>
+        </div>
+
+        <div class="control-buttons">
+            <button class="submit-button" onclick="checkAnswer()">✓ Submit Answer</button>
+            <button class="submit-button clear-button" onclick="skipProblem()">Skip ➜</button>
+        </div>
+
+        <div id="completionSection" class="hidden">
+            <div class="completion-message">
+                <div class="completion-title">🎉 Workout Complete!</div>
+                <div class="completion-text">You've completed today's mental workout!</div>
+                <div class="completion-text">Come back tomorrow to continue your streak!</div>
+                <button class="share-button" onclick="shareResults()">📤 Share Your Stats</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Modal -->
+    <div id="statsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">📊 Your Statistics</div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-number" id="totalPlayed">0</div>
+                    <div class="stat-label">Days Played</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number" id="winPercentage">0%</div>
+                    <div class="stat-label">Success Rate</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number" id="currentStreakStat">0</div>
+                    <div class="stat-label">Current Streak</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number" id="maxStreak">0</div>
+                    <div class="stat-label">Max Streak</div>
+                </div>
+            </div>
+
+            <div class="distribution">
+                <div class="distribution-title">Guess Distribution</div>
+                <div class="distribution-bar">
+                    <div class="bar-label">1</div>
+                    <div class="bar-fill" id="bar1">0</div>
+                </div>
+                <div class="distribution-bar">
+                    <div class="bar-label">2</div>
+                    <div class="bar-fill" id="bar2">0</div>
+                </div>
+                <div class="distribution-bar">
+                    <div class="bar-label">3</div>
+                    <div class="bar-fill" id="bar3">0</div>
+                </div>
+                <div class="distribution-bar">
+                    <div class="bar-label">❌</div>
+                    <div class="bar-fill" id="barFailed" style="background: #f56565;">0</div>
+                </div>
+            </div>
+
+            <button class="close-button" onclick="closeStats()">Close</button>
+        </div>
+    </div>
+
+    <script>
+        // Game state
+        let currentAnswer = 0;
+        let userInput = '';
+        let currentAttempt = 1;
+        let currentProblemIndex = 0;
+        const PROBLEMS_PER_DAY = 7;
+        let startTime = null;
+        let timerInterval = null;
+        let finalTime = 0;
+        
+        // Storage keys
+        const STORAGE_KEYS = {
+            stats: 'mathGameStats',
+            today: 'mathGameToday',
+            lastPlayed: 'mathGameLastPlayed'
+        };
+
+        // Initialize or load stats
+        function initStats() {
+            const defaultStats = {
+                gamesPlayed: 0,
+                gamesWon: 0,
+                currentStreak: 0,
+                maxStreak: 0,
+                guessDistribution: { 1: 0, 2: 0, 3: 0, failed: 0 },
+                totalProblems: 0,
+                problemsCorrect: 0
+            };
+            
+            const stored = localStorage.getItem(STORAGE_KEYS.stats);
+            return stored ? JSON.parse(stored) : defaultStats;
+        }
+
+        function saveStats(stats) {
+            localStorage.setItem(STORAGE_KEYS.stats, JSON.stringify(stats));
+        }
+
+        function getTodayString() {
+            const today = new Date();
+            return `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+        }
+
+        function getTodayData() {
+            const stored = localStorage.getItem(STORAGE_KEYS.today);
+            const today = getTodayString();
+            
+            if (stored) {
+                const data = JSON.parse(stored);
+                if (data.date === today) {
+                    return data;
+                }
+            }
+            
+            // New day, reset
+            return {
+                date: today,
+                problemsCompleted: 0,
+                results: [],
+                completed: false,
+                timeInSeconds: 0
+            };
+        }
+
+        function startTimer() {
+            if (!startTime) {
+                startTime = Date.now();
+                timerInterval = setInterval(updateTimer, 100);
+            }
+        }
+
+        function updateTimer() {
+            if (startTime) {
+                const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                const minutes = Math.floor(elapsed / 60);
+                const seconds = elapsed % 60;
+                document.getElementById('timerValue').textContent = 
+                    `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            }
+        }
+
+        function stopTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+                if (startTime) {
+                    finalTime = Math.floor((Date.now() - startTime) / 1000);
+                }
+            }
+        }
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function saveTodayData(data) {
+            localStorage.setItem(STORAGE_KEYS.today, JSON.stringify(data));
+        }
+
+        function updateStreak() {
+            const stats = initStats();
+            const lastPlayed = localStorage.getItem(STORAGE_KEYS.lastPlayed);
+            const today = getTodayString();
+            
+            if (lastPlayed) {
+                const last = new Date(lastPlayed);
+                const current = new Date(today);
+                const diffTime = Math.abs(current - last);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                
+                if (diffDays === 1) {
+                    stats.currentStreak++;
+                } else if (diffDays > 1) {
+                    stats.currentStreak = 1;
+                }
+            } else {
+                stats.currentStreak = 1;
+            }
+            
+            stats.maxStreak = Math.max(stats.maxStreak, stats.currentStreak);
+            localStorage.setItem(STORAGE_KEYS.lastPlayed, today);
+            saveStats(stats);
+            
+            return stats.currentStreak;
+        }
+
+        function updateDisplay() {
+            const todayData = getTodayData();
+            const stats = initStats();
+            
+            document.getElementById('dailyStreak').textContent = stats.currentStreak;
+            // Cap the display at 10 to prevent showing "11 of 10"
+            const currentProblemNum = Math.min(todayData.problemsCompleted + 1, PROBLEMS_PER_DAY);
+            document.getElementById('currentProblem').textContent = currentProblemNum;
+            document.getElementById('totalProblems').textContent = PROBLEMS_PER_DAY;
+            
+            // Check if today's practice is complete
+            if (todayData.completed || todayData.problemsCompleted >= PROBLEMS_PER_DAY) {
+                showCompletion();
+            }
+        }
+
+        function updateAttemptsDisplay() {
+            const boxes = document.querySelectorAll('.attempt-box');
+            boxes.forEach((box, index) => {
+                box.className = 'attempt-box';
+                if (index + 1 < currentAttempt) {
+                    box.classList.add('incorrect');
+                    box.textContent = '❌';
+                } else if (index + 1 === currentAttempt) {
+                    box.classList.add('current');
+                    box.textContent = index + 1;
+                } else {
+                    box.textContent = index + 1;
+                }
+            });
+        }
+
+        const operations = ['+', '-', '×', '÷', '%'];
+
+        function generateProblem() {
+            // Start timer on first problem
+            if (currentProblemIndex === 0 && !startTime) {
+                startTimer();
+            }
+
+            const operation = operations[Math.floor(Math.random() * operations.length)];
+            let num1, num2, answer, problemText;
+
+            // Generate numbers
+            num1 = Math.floor(Math.random() * 30) + 5;
+            num2 = Math.floor(Math.random() * 30) + 5;
+
+            switch(operation) {
+                case '+':
+                    answer = num1 + num2;
+                    problemText = `${num1} + ${num2} = ?`;
+                    break;
+                case '-':
+                    if (num1 < num2) [num1, num2] = [num2, num1];
+                    answer = num1 - num2;
+                    problemText = `${num1} - ${num2} = ?`;
+                    break;
+                case '×':
+                    // Exclude 1, 10, and 100
+                    do {
+                        num1 = Math.floor(Math.random() * 10) + 2;
+                        num2 = Math.floor(Math.random() * 10) + 2;
+                    } while (num1 === 10 || num2 === 10 || num1 === 1 || num2 === 1);
+                    
+                    answer = num1 * num2;
+                    problemText = `${num1} × ${num2} = ?`;
+                    break;
+                case '÷':
+                    // Exclude 1, 10, and 100 as divisors
+                    do {
+                        num2 = Math.floor(Math.random() * 9) + 2;
+                    } while (num2 === 10 || num2 === 1);
+                    
+                    answer = Math.floor(Math.random() * 15) + 2;
+                    num1 = num2 * answer;
+                    problemText = `${num1} ÷ ${num2} = ?`;
+                    break;
+                case '%':
+                    num1 = [10, 20, 25, 50, 75][Math.floor(Math.random() * 5)];
+                    num2 = Math.floor(Math.random() * 10) * 10 + 10;
+                    answer = (num1 / 100) * num2;
+                    // Round to 1 decimal place for display
+                    answer = Math.round(answer * 10) / 10;
+                    problemText = `What is ${num1}% of ${num2}?`;
+                    break;
+            }
+
+            currentAnswer = answer;
+            currentAttempt = 1;
+            document.getElementById('problemText').textContent = problemText;
+            clearInput();
+            document.getElementById('feedback').style.display = 'none';
+            updateAttemptsDisplay();
+        }
+
+        function addDigit(digit) {
+            if (digit === '.' && userInput.includes('.')) return;
+            userInput += digit;
+            document.getElementById('answerInput').value = userInput;
+        }
+
+        function clearInput() {
+            userInput = '';
+            document.getElementById('answerInput').value = '';
+        }
+
+        function checkAnswer() {
+            const todayData = getTodayData();
+            if (todayData.completed || todayData.problemsCompleted >= PROBLEMS_PER_DAY) {
+                return;
+            }
+            
+            if (userInput === '') return;
+
+            const userAnswer = parseFloat(userInput);
+            const feedback = document.getElementById('feedback');
+            const stats = initStats();
+
+            if (Math.abs(userAnswer - currentAnswer) < 0.1) {
+                // Correct!
+                feedback.className = 'feedback correct';
+                feedback.textContent = `🎉 Correct! The answer is ${currentAnswer}`;
+                
+                const boxes = document.querySelectorAll('.attempt-box');
+                boxes[currentAttempt - 1].classList.remove('current');
+                boxes[currentAttempt - 1].classList.add('correct');
+                boxes[currentAttempt - 1].textContent = '✓';
+                
+                // Update stats
+                stats.guessDistribution[currentAttempt]++;
+                stats.problemsCorrect++;
+                stats.totalProblems++;
+                saveStats(stats);
+                
+                // Save today's result
+                todayData.results.push({ attempts: currentAttempt, correct: true });
+                todayData.problemsCompleted++;
+                saveTodayData(todayData);
+                
+                updateDisplay();
+
+                setTimeout(() => {
+                    if (todayData.problemsCompleted >= PROBLEMS_PER_DAY) {
+                        completeDailyPractice();
+                    } else {
+                        generateProblem();
+                    }
+                }, 2000);
+            } else {
+                // Incorrect
+                if (currentAttempt < 3) {
+                    currentAttempt++;
+                    feedback.className = 'feedback incorrect';
+                    feedback.textContent = `Try again! You have ${4 - currentAttempt} attempt${4 - currentAttempt > 1 ? 's' : ''} left.`;
+                    updateAttemptsDisplay();
+                    clearInput();
+                } else {
+                    // Failed after 3 attempts
+                    feedback.className = 'feedback incorrect';
+                    feedback.textContent = `The correct answer was ${currentAnswer}`;
+                    
+                    const boxes = document.querySelectorAll('.attempt-box');
+                    boxes[2].classList.remove('current');
+                    boxes[2].classList.add('incorrect');
+                    boxes[2].textContent = '❌';
+                    
+                    // Update stats
+                    stats.guessDistribution.failed++;
+                    stats.totalProblems++;
+                    saveStats(stats);
+                    
+                    // Save today's result
+                    todayData.results.push({ attempts: 3, correct: false });
+                    todayData.problemsCompleted++;
+                    saveTodayData(todayData);
+                    
+                    updateDisplay();
+
+                    setTimeout(() => {
+                        if (todayData.problemsCompleted >= PROBLEMS_PER_DAY) {
+                            completeDailyPractice();
+                        } else {
+                            generateProblem();
+                        }
+                    }, 3000);
+                }
+            }
+        }
+
+        function skipProblem() {
+            const todayData = getTodayData();
+            if (todayData.completed || todayData.problemsCompleted >= PROBLEMS_PER_DAY) {
+                return;
+            }
+            
+            const stats = initStats();
+            stats.guessDistribution.failed++;
+            stats.totalProblems++;
+            saveStats(stats);
+            
+            todayData.results.push({ attempts: 0, correct: false });
+            todayData.problemsCompleted++;
+            saveTodayData(todayData);
+            
+            updateDisplay();
+            
+            if (todayData.problemsCompleted >= PROBLEMS_PER_DAY) {
+                completeDailyPractice();
+            } else {
+                generateProblem();
+            }
+        }
+
+        function completeDailyPractice() {
+            stopTimer();
+            
+            const todayData = getTodayData();
+            todayData.completed = true;
+            todayData.timeInSeconds = finalTime;
+            saveTodayData(todayData);
+            
+            const stats = initStats();
+            stats.gamesPlayed++;
+            
+            // Check if they got at least half correct
+            const correctCount = todayData.results.filter(r => r.correct).length;
+            if (correctCount >= PROBLEMS_PER_DAY / 2) {
+                stats.gamesWon++;
+            }
+            
+            saveStats(stats);
+            updateStreak();
+            showCompletion();
+        }
+
+        function showCompletion() {
+            document.getElementById('completionSection').classList.remove('hidden');
+            document.querySelector('.number-pad').style.display = 'none';
+            document.querySelector('.control-buttons').style.display = 'none';
+            document.querySelector('.problem-display').style.display = 'none';
+            document.querySelector('.attempts-tracker').style.display = 'none';
+            document.querySelector('.timer-display').style.display = 'none';
+            document.getElementById('feedback').style.display = 'none';
+            // Clear the problem text
+            document.getElementById('problemText').textContent = '';
+            document.getElementById('answerInput').value = '';
+        }
+
+        function shareResults() {
+            const todayData = getTodayData();
+            const stats = initStats();
+            const correctCount = todayData.results.filter(r => r.correct).length;
+            const timeStr = formatTime(todayData.timeInSeconds || finalTime);
+            
+            let shareText = `🏋️ Brain Gym Daily ${getTodayString()}\n`;
+            shareText += `Score: ${correctCount}/${PROBLEMS_PER_DAY}\n`;
+            shareText += `Time: ${timeStr}\n`;
+            shareText += `Streak: ${stats.currentStreak} 🔥\n\n`;
+            
+            todayData.results.forEach((result, index) => {
+                if (result.correct) {
+                    shareText += result.attempts === 1 ? '🟢' : result.attempts === 2 ? '🟡' : '🟠';
+                } else {
+                    shareText += '⚫';
+                }
+                if ((index + 1) % 5 === 0) shareText += '\n';
+            });
+            
+            shareText += `\n\nTry it yourself: ${window.location.href}`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Brain Gym Daily',
+                    text: shareText
+                }).catch(() => {
+                    // Fallback to clipboard
+                    copyToClipboard(shareText, 'Stats copied to clipboard!');
+                });
+            } else {
+                copyToClipboard(shareText, 'Stats copied to clipboard!');
+            }
+        }
+
+        function shareApp() {
+            const appUrl = window.location.href;
+            const shareText = `Check out Brain Gym Daily - Your daily mental workout!\n\n${appUrl}`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Brain Gym Daily',
+                    text: 'Check out Brain Gym Daily - Your daily mental workout!',
+                    url: appUrl
+                }).catch(() => {
+                    // Fallback to clipboard
+                    copyToClipboard(appUrl, 'App link copied to clipboard!');
+                });
+            } else {
+                copyToClipboard(appUrl, 'App link copied to clipboard!');
+            }
+        }
+
+        function copyToClipboard(text, message) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert(message);
+            }).catch(() => {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                alert(message);
+            });
+        }
+
+        function showStats() {
+            const stats = initStats();
+            const modal = document.getElementById('statsModal');
+            
+            document.getElementById('totalPlayed').textContent = stats.gamesPlayed;
+            const winRate = stats.gamesPlayed > 0 ? Math.round((stats.gamesWon / stats.gamesPlayed) * 100) : 0;
+            document.getElementById('winPercentage').textContent = winRate + '%';
+            document.getElementById('currentStreakStat').textContent = stats.currentStreak;
+            document.getElementById('maxStreak').textContent = stats.maxStreak;
+            
+            // Update guess distribution
+            const maxGuesses = Math.max(
+                stats.guessDistribution[1],
+                stats.guessDistribution[2],
+                stats.guessDistribution[3],
+                stats.guessDistribution.failed,
+                1
+            );
+            
+            for (let i = 1; i <= 3; i++) {
+                const bar = document.getElementById(`bar${i}`);
+                const count = stats.guessDistribution[i];
+                const width = (count / maxGuesses) * 100;
+                bar.style.width = Math.max(width, 10) + '%';
+                bar.textContent = count;
+            }
+            
+            const failedBar = document.getElementById('barFailed');
+            const failedCount = stats.guessDistribution.failed;
+            const failedWidth = (failedCount / maxGuesses) * 100;
+            failedBar.style.width = Math.max(failedWidth, 10) + '%';
+            failedBar.textContent = failedCount;
+            
+            modal.classList.add('show');
+        }
+
+        function closeStats() {
+            document.getElementById('statsModal').classList.remove('show');
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('statsModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeStats();
+            }
+        });
+
+        // Keyboard support
+        document.addEventListener('keypress', function(e) {
+            if (e.key >= '0' && e.key <= '9' || e.key === '.') {
+                addDigit(e.key);
+            } else if (e.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Backspace') {
+                userInput = userInput.slice(0, -1);
+                document.getElementById('answerInput').value = userInput;
+            }
+        });
+
+        // Initialize game
+        updateDisplay();
+        const todayData = getTodayData();
+        if (!todayData.completed && todayData.problemsCompleted < PROBLEMS_PER_DAY) {
+            generateProblem();
+        }
+    </script>
+</body>
+</html>
