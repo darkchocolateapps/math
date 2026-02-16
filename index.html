@@ -764,7 +764,7 @@
     <div class="game-container">
         <div class="compact-header">
             <div class="header-left">
-                <div class="app-name">🏋️ Brain Gym</div>
+                <div class="app-name">🏋️ Back to Basics Brain Gym</div>
                 <div class="streak-compact">🔥 <span id="dailyStreak">0</span> day streak</div>
             </div>
             <div class="header-right">
@@ -1468,7 +1468,7 @@
             const correctCount = todayData.results.filter(r => r.correct).length;
             const timeStr = formatTime(todayData.timeInSeconds || finalTime);
             
-            let shareText = `🏋️ Brain Gym Daily ${getTodayString()}\n`;
+            let shareText = `🏋️ Back to Basics Brain Gym Daily ${getTodayString()}\n`;
             shareText += `Score: ${correctCount}/${PROBLEMS_PER_DAY}\n`;
             shareText += `Time: ${timeStr}\n`;
             shareText += `Streak: ${stats.currentStreak} 🔥\n\n`;
@@ -1486,7 +1486,7 @@
             
             if (navigator.share) {
                 navigator.share({
-                    title: 'Brain Gym Daily',
+                    title: 'Back to Basics Brain Gym Daily',
                     text: shareText
                 }).catch(() => {
                     // Fallback to clipboard
@@ -1499,12 +1499,12 @@
 
         function shareApp() {
             const appUrl = window.location.href;
-            const shareText = `Check out Brain Gym Daily - Your daily mental workout!\n\n${appUrl}`;
+            const shareText = `Check out Back to Basics Brain Gym Daily - Your daily mental workout!\n\n${appUrl}`;
             
             if (navigator.share) {
                 navigator.share({
-                    title: 'Brain Gym Daily',
-                    text: 'Check out Brain Gym Daily - Your daily mental workout!',
+                    title: 'Back to Basics Brain Gym Daily',
+                    text: 'Check out Back to Basics Brain Gym Daily - Your daily mental workout!',
                     url: appUrl
                 }).catch(() => {
                     // Fallback to clipboard
